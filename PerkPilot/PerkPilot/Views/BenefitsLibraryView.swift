@@ -15,6 +15,13 @@ struct BenefitsLibraryView: View {
     @State private var mutedOnly = false
     @State private var expandedBenefits = Set<String>()
 
+    /// Lets bento tiles / other views deep-link with filters pre-applied.
+    init(searchText: String = "", lesserKnownOnly: Bool = false, mutedOnly: Bool = false) {
+        _searchText = State(initialValue: searchText)
+        _lesserKnownOnly = State(initialValue: lesserKnownOnly)
+        _mutedOnly = State(initialValue: mutedOnly)
+    }
+
     private var mutedIds: Set<String> { Set(mutes.map(\.benefitStableId)) }
 
     private var filtered: [BenefitItem] {
@@ -37,7 +44,7 @@ struct BenefitsLibraryView: View {
                 Section {
                     Picker("Card", selection: $selectedCardId) {
                         Text("All cards").tag(String?(nil))
-                        ForEach(cards) { card in
+                        ForEach(cards, id: \.stableId) { card in
                             Text(card.canonicalName).tag(String?(card.stableId))
                         }
                     }
@@ -52,7 +59,7 @@ struct BenefitsLibraryView: View {
                 }
 
                 Section("\(filtered.count) benefits") {
-                    ForEach(filtered) { benefit in
+                    ForEach(filtered, id: \.stableId) { benefit in
                         BenefitRow(
                             benefit: benefit,
                             cardName: benefit.card?.canonicalName,

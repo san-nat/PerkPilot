@@ -14,6 +14,23 @@ struct CardDetailView: View {
 
     private var mutedIds: Set<String> { Set(mutes.map(\.benefitStableId)) }
 
+    private var mutedCount: Int {
+        Set(card.benefits.map(\.stableId)).intersection(mutedIds).count
+    }
+
+    private func cardStat(value: String, label: String) -> some View {
+        VStack(spacing: 2) {
+            Text(value)
+                .font(.title3)
+                .fontWeight(.semibold)
+                .monospacedDigit()
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+    }
+
     private struct CadenceGroup: Identifiable {
         var cadence: Cadence
         var benefits: [BenefitItem]
@@ -31,9 +48,21 @@ struct CardDetailView: View {
     var body: some View {
         List {
             Section {
-                LabeledContent("Issuer", value: card.issuer)
-                LabeledContent("Annual fee", value: card.annualFeeDisplay)
-                LabeledContent("Benefits", value: "\(card.benefits.count)")
+                MetalCardView(card: card)
+                    .listRowInsets(EdgeInsets(top: 12, leading: 16, bottom: 4, trailing: 16))
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+
+                HStack(spacing: 0) {
+                    cardStat(value: "\(card.benefits.count)", label: "Benefits")
+                    Divider().frame(height: 32)
+                    cardStat(value: "\(card.recurringBenefits.count)", label: "Recurring")
+                    Divider().frame(height: 32)
+                    cardStat(value: "\(mutedCount)", label: "Muted")
+                }
+                .padding(.vertical, 4)
+                .listRowBackground(PPTheme.tileBackground)
+
                 if card.isArchived {
                     Label("Archived — no checklist tasks generated", systemImage: "archivebox")
                         .foregroundStyle(.secondary)
@@ -42,7 +71,7 @@ struct CardDetailView: View {
 
             ForEach(grouped) { group in
                 Section(group.cadence.displayName) {
-                    ForEach(group.benefits) { benefit in
+                    ForEach(group.benefits, id: \.stableId) { benefit in
                         BenefitRow(
                             benefit: benefit,
                             cardName: card.canonicalName,
@@ -169,7 +198,7 @@ struct BenefitRow: View {
                             .font(.caption)
                             .foregroundStyle(.orange)
                     }
-                    ForEach(benefit.tips) { tip in
+                    ForEach(benefit.tips, id: \.stableId) { tip in
                         HStack(alignment: .top, spacing: 6) {
                             Image(systemName: "lightbulb")
                                 .foregroundStyle(.yellow)

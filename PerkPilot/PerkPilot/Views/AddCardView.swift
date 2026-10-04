@@ -20,7 +20,7 @@ struct AddCardView: View {
                     )
                 } else {
                     Section("Archived cards") {
-                        ForEach(archivedCards) { card in
+                        ForEach(archivedCards, id: \.stableId) { card in
                             HStack {
                                 CardRow(card: card)
                                 Spacer()

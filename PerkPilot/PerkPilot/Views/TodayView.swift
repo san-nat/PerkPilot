@@ -1,8 +1,9 @@
 import SwiftUI
 import SwiftData
 
-/// The default launch view: every recurring credit for the current period,
-/// grouped by cadence, with one-tap checkmarks.
+/// Bento-grid dashboard: an asymmetrical grid of summary tiles up top
+/// (each tappable into its detail), with the full checklist below.
+/// "Frictionless wealth management" — the state of every credit at a glance.
 struct TodayView: View {
     @Environment(\.modelContext) private var context
 
@@ -14,83 +15,276 @@ struct TodayView: View {
     private let now = Date()
     private let cadences: [Cadence] = [.monthly, .quarterly, .semiannual, .annual]
 
-    private var completedKeys: Set<String> {
-        Set(completions.map(\.lookupKey))
+    private var completedKeys: Set<String> { Set(completions.map(\.lookupKey)) }
+    private var mutedIds: Set<String> { Set(mutes.map(\.benefitStableId)) }
+
+    private var activeBenefits: [BenefitItem] {
+        cards.flatMap(\.benefits).filter { !mutedIds.contains($0.stableId) }
     }
 
-    private var mutedIds: Set<String> {
-        Set(mutes.map(\.benefitStableId))
+    private func rows(for cadence: Cadence) -> [TaskRow] {
+        ChecklistEngine.tasks(cards: cards, mutedIds: mutedIds, cadence: cadence)
     }
 
-    /// (card, benefit) pairs due for a cadence this period, excluding muted.
-    private struct TaskRow: Identifiable {
-        var card: CardItem
-        var benefit: BenefitItem
-        var id: String { benefit.stableId }
+    private func key(for cadence: Cadence) -> String? {
+        RecurrenceEngine.periodKey(cadence: cadence, date: now)
     }
 
-    private func tasks(for cadence: Cadence) -> [TaskRow] {
-        cards.flatMap { card in
-            card.benefits
-                .filter { $0.cadence == cadence && !mutedIds.contains($0.stableId) }
-                .sorted { $0.name < $1.name }
-                .map { TaskRow(card: card, benefit: $0) }
-        }
+    private func doneCount(for cadence: Cadence) -> Int {
+        guard let key = key(for: cadence) else { return 0 }
+        return ChecklistEngine.doneCount(rows: rows(for: cadence), periodKey: key, completedKeys: completedKeys)
     }
 
-    private var allTasks: [(task: TaskRow, periodKey: String)] {
-        cadences.flatMap { cadence in
-            guard let key = RecurrenceEngine.periodKey(cadence: cadence, date: now) else { return [] }
-            return tasks(for: cadence).map { (task: $0, periodKey: key) }
-        }
+    private var totalRows: Int { cadences.reduce(0) { $0 + rows(for: $1).count } }
+    private var totalDone: Int { cadences.reduce(0) { $0 + doneCount(for: $1) } }
+
+    private var loungeCount: Int {
+        activeBenefits.filter { $0.name.localizedCaseInsensitiveContains("lounge") }.count
+    }
+
+    private var gemCount: Int {
+        activeBenefits.filter(\.lesserKnown).count
     }
 
     var body: some View {
         NavigationStack {
-            List {
-                progressSection
-                ForEach(cadences, id: \.self) { cadence in
-                    periodSection(cadence)
+            ScrollView {
+                VStack(alignment: .leading, spacing: PPTheme.gridSpacing) {
+                    bentoGrid
+                    checklistSections
                 }
+                .padding(.horizontal, PPTheme.screenPad)
+                .padding(.vertical, 12)
             }
+            .background(PPTheme.pageBackground)
             .navigationTitle("Today")
         }
     }
 
-    private var progressSection: some View {
-        let total = allTasks.count
-        let done = allTasks.filter { completedKeys.contains("\($0.task.benefit.stableId)|\($0.periodKey)") }.count
-        return Section {
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("\(done) of \(total) credits used")
-                        .font(.headline)
-                    Text("Resets next period — use it or lose it.")
+    // MARK: - Bento grid
+
+    private var bentoGrid: some View {
+        LazyVGrid(
+            columns: [GridItem(.flexible(), spacing: PPTheme.gridSpacing),
+                      GridItem(.flexible(), spacing: PPTheme.gridSpacing)],
+            spacing: PPTheme.gridSpacing
+        ) {
+            expiringTile
+                .gridCellColumns(2)
+            quarterTile
+            creditsTile
+            loungeTile
+            gemsTile
+            walletTile
+            mutedTile
+        }
+    }
+
+    private var expiringTile: some View {
+        let total = rows(for: .monthly).count
+        let done = doneCount(for: .monthly)
+        let remaining = total - done
+        let label = RecurrenceEngine.periodLabel(cadence: .monthly, date: now) ?? ""
+        return NavigationLink(destination: ChecklistDetailView(cadence: .monthly)) {
+            BentoTile(minHeight: 148) {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Label("Expiring this month", systemImage: "alarm.fill")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                    }
+                    Text("\(remaining) left")
+                        .font(.system(size: 34, weight: .bold, design: .rounded))
+                    ProgressView(value: total > 0 ? Double(done) / Double(total) : 0)
+                        .tint(PPTheme.gold)
+                    Text("\(done) of \(total) used · resets after \(label)")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-                Spacer()
-                ProgressView(value: total > 0 ? Double(done) / Double(total) : 0)
-                    .progressViewStyle(.circular)
+            }
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var quarterTile: some View {
+        let total = rows(for: .quarterly).count
+        let done = doneCount(for: .quarterly)
+        return NavigationLink(destination: ChecklistDetailView(cadence: .quarterly)) {
+            BentoTile {
+                BentoStat(
+                    title: "This quarter",
+                    value: "\(done)/\(total)",
+                    subtitle: "Quarterly credits used",
+                    systemImage: "calendar",
+                    tint: .blue
+                )
+            }
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var creditsTile: some View {
+        NavigationLink(destination: ChecklistDetailView(cadence: nil)) {
+            BentoTile {
+                VStack(alignment: .leading, spacing: 6) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.title3)
+                        .foregroundStyle(PPTheme.gold)
+                        .accessibilityHidden(true)
+                    Spacer(minLength: 2)
+                    HStack(alignment: .bottom, spacing: 10) {
+                        Text("\(totalDone)/\(totalRows)")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .monospacedDigit()
+                        ProgressView(value: totalRows > 0 ? Double(totalDone) / Double(totalRows) : 0)
+                            .progressViewStyle(.circular)
+                            .tint(PPTheme.gold)
+                            .scaleEffect(0.8)
+                    }
+                    Text("Credits used")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                    Text("All recurring credits")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var loungeTile: some View {
+        NavigationLink(destination: BenefitsLibraryView(searchText: "lounge")) {
+            BentoTile {
+                BentoStat(
+                    title: "Lounge access",
+                    value: "\(loungeCount)",
+                    subtitle: "Lounge perks in your wallet",
+                    systemImage: "airplane",
+                    tint: .indigo
+                )
+            }
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var gemsTile: some View {
+        NavigationLink(destination: BenefitsLibraryView(lesserKnownOnly: true)) {
+            BentoTile {
+                BentoStat(
+                    title: "Hidden gems",
+                    value: "\(gemCount)",
+                    subtitle: "Lesser-known tricks & perks",
+                    systemImage: "lightbulb.fill",
+                    tint: .yellow
+                )
+            }
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var walletTile: some View {
+        NavigationLink(destination: CardsView()) {
+            BentoTile {
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack(spacing: -14) {
+                        ForEach(cards.prefix(3), id: \.stableId) { card in
+                            MetalCardView(card: card, compact: true)
+                                .frame(width: 64)
+                        }
+                    }
+                    .accessibilityHidden(true)
+                    Spacer(minLength: 2)
+                    Text("\(cards.count)")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .monospacedDigit()
+                    Text("Cards in wallet")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                    Text("Tap to manage")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var mutedTile: some View {
+        NavigationLink(destination: BenefitsLibraryView(mutedOnly: true)) {
+            BentoTile {
+                BentoStat(
+                    title: "Muted",
+                    value: "\(mutes.count)",
+                    subtitle: "Rewards you've hidden",
+                    systemImage: "eye.slash",
+                    tint: .gray
+                )
+            }
+        }
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - Checklist (one-tap checkmarks, unchanged behavior)
+
+    private var checklistSections: some View {
+        VStack(alignment: .leading, spacing: PPTheme.gridSpacing) {
+            Text("Checklist")
+                .font(.title3)
+                .fontWeight(.bold)
+                .padding(.horizontal, 4)
+                .padding(.top, 8)
+            ForEach(cadences, id: \.self) { cadence in
+                periodSection(cadence)
             }
         }
     }
 
     @ViewBuilder
     private func periodSection(_ cadence: Cadence) -> some View {
-        if let key = RecurrenceEngine.periodKey(cadence: cadence, date: now),
+        if let key = key(for: cadence),
            let label = RecurrenceEngine.periodLabel(cadence: cadence, date: now)
         {
-            let rows = tasks(for: cadence)
-            let done = rows.filter { completedKeys.contains("\($0.benefit.stableId)|\(key)") }.count
-            Section("\(cadence.displayName) — \(label) (\(done)/\(rows.count))") {
-                ForEach(rows) { row in
-                    ChecklistRow(
-                        cardName: row.card.canonicalName,
-                        benefit: row.benefit,
-                        isDone: completedKeys.contains("\(row.benefit.stableId)|\(key)"),
-                        onToggle: { toggle(row.benefit, periodKey: key) }
-                    )
+            let rows = rows(for: cadence)
+            if !rows.isEmpty {
+                let done = ChecklistEngine.doneCount(rows: rows, periodKey: key, completedKeys: completedKeys)
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text(cadence.displayName)
+                            .font(.headline)
+                        Text("· \(label)")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Text("\(done)/\(rows.count)")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                    }
+                    .padding(.horizontal, 4)
+
+                    VStack(spacing: 8) {
+                        ForEach(rows) { row in
+                            ChecklistRow(
+                                cardName: row.card.canonicalName,
+                                benefit: row.benefit,
+                                isDone: completedKeys.contains(ChecklistEngine.lookupKey(row, periodKey: key)),
+                                onToggle: { toggle(row.benefit, periodKey: key) }
+                            )
+                            .padding(12)
+                            .background(
+                                PPTheme.tileBackground,
+                                in: RoundedRectangle(cornerRadius: PPTheme.cardRadius, style: .continuous)
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -117,7 +311,7 @@ struct ChecklistRow: View {
             Button(action: onToggle) {
                 Image(systemName: isDone ? "checkmark.circle.fill" : "circle")
                     .font(.title3)
-                    .foregroundStyle(isDone ? .green : .secondary)
+                    .foregroundStyle(isDone ? PPTheme.success : .secondary)
             }
             .buttonStyle(.plain)
 
@@ -134,9 +328,11 @@ struct ChecklistRow: View {
                 if benefit.enrollmentRequired {
                     Text("Enrollment required")
                         .font(.caption2)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(Color.orange.opacity(0.15))
+                        .fontWeight(.medium)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(PPTheme.gold.opacity(0.15))
+                        .foregroundStyle(PPTheme.gold)
                         .clipShape(Capsule())
                 }
             }

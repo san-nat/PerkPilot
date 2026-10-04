@@ -14,7 +14,7 @@ struct CardsView: View {
         NavigationStack {
             List {
                 Section("Wallet (\(activeCards.count))") {
-                    ForEach(activeCards) { card in
+                    ForEach(activeCards, id: \.stableId) { card in
                         NavigationLink(destination: CardDetailView(card: card)) {
                             CardRow(card: card)
                         }
@@ -22,7 +22,7 @@ struct CardsView: View {
                 }
                 if !archivedCards.isEmpty {
                     Section("Archived") {
-                        ForEach(archivedCards) { card in
+                        ForEach(archivedCards, id: \.stableId) { card in
                             NavigationLink(destination: CardDetailView(card: card)) {
                                 CardRow(card: card)
                             }
@@ -48,20 +48,25 @@ struct CardRow: View {
     var card: CardItem
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(card.canonicalName)
-                .font(.headline)
-            HStack {
+        HStack(spacing: 14) {
+            MetalCardView(card: card, compact: true)
+                .frame(width: 120)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(card.canonicalName)
+                    .font(.headline)
+                    .lineLimit(2)
                 Text(card.issuer)
-                Text("•")
-                Text(card.annualFeeDisplay)
-                Text("•")
-                Text("\(card.benefits.count) benefits")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Text("\(card.annualFeeDisplay) · \(card.benefits.count) benefits")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+                    .lineLimit(2)
             }
-            .font(.caption)
-            .foregroundStyle(.secondary)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 6)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(card.canonicalName), \(card.issuer)")
     }
 }
 

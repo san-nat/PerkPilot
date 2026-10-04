@@ -31,8 +31,10 @@ APP_SOURCES = [
     "PerkPilot/Services/SeedLoader.swift",
     "PerkPilot/Services/DiscoveryService.swift",
     "PerkPilot/Services/NotificationService.swift",
+    "PerkPilot/Design/Theme.swift",
     "PerkPilot/Views/ContentView.swift",
     "PerkPilot/Views/TodayView.swift",
+    "PerkPilot/Views/ChecklistDetailView.swift",
     "PerkPilot/Views/CardsView.swift",
     "PerkPilot/Views/CardDetailView.swift",
     "PerkPilot/Views/AddCardView.swift",
@@ -72,7 +74,7 @@ reg("product:app")
 reg("product:test")
 reg("proxy:test->app")
 reg("dep:test->app")
-for g in ("main", "app", "models", "services", "views", "resources", "tests", "products"):
+for g in ("main", "app", "models", "services", "views", "design", "resources", "tests", "products"):
     reg("group:" + g)
 for ph in ("app-sources", "app-frameworks", "app-resources",
            "test-sources", "test-frameworks", "test-resources"):
@@ -183,11 +185,12 @@ def gen() -> str:
     emit_group("models", [fr(p) for p in APP_SOURCES if "/Models/" in p], name="Models")
     emit_group("services", [fr(p) for p in APP_SOURCES if "/Services/" in p], name="Services")
     emit_group("views", [fr(p) for p in APP_SOURCES if "/Views/" in p], name="Views")
+    emit_group("design", [fr(p) for p in APP_SOURCES if "/Design/" in p], name="Design")
     emit_group("resources", [fr(_p) for _p in SEED_JSONS], name="Resources")
     emit_group(
         "app",
         [fr("PerkPilot/PerkPilotApp.swift"), fr(INFO_PLIST),
-         U["group:models"], U["group:services"], U["group:views"], U["group:resources"]],
+         U["group:models"], U["group:services"], U["group:views"], U["group:design"], U["group:resources"]],
         name="PerkPilot", path="PerkPilot",
     )
     emit_group("tests", [fr(p) for p in TEST_SOURCES], name="PerkPilotTests", path="PerkPilotTests")

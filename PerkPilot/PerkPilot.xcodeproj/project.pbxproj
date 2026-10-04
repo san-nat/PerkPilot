@@ -18,8 +18,10 @@
 		ACB568051894563686085180 = {isa = PBXBuildFile; fileRef = B2B91F99D0515E1AAA5E41BF; };
 		E4AA5BDC005454CC8BD02AE2 = {isa = PBXBuildFile; fileRef = 6D37B04ED80B5A1683B6E9B1; };
 		D6EDA0B5E7AD5A7784A1BC1A = {isa = PBXBuildFile; fileRef = FF8FB5EDEE195642A4BE9278; };
+		0EDCA7ABBAA658B89F0020D4 = {isa = PBXBuildFile; fileRef = B957D47B28A656578531EC82; };
 		1CAAE2743F1558B78ECE4EE0 = {isa = PBXBuildFile; fileRef = AC1EA63CC534585896CCA074; };
 		88B4D013DF0B5EFFB7723146 = {isa = PBXBuildFile; fileRef = B4A68ABEEEA65B5DA6526710; };
+		5CB85483E2F7502A9A699627 = {isa = PBXBuildFile; fileRef = E548BC2385B457B18FBD1F85; };
 		D7F36D68D74A52D196C3E62D = {isa = PBXBuildFile; fileRef = 3C49579D45925564B0861555; };
 		5AE6A6F64248520498F833F4 = {isa = PBXBuildFile; fileRef = C7F97B9BF02852898BC8B401; };
 		8E370784142E53AA87C85032 = {isa = PBXBuildFile; fileRef = 4591A8BDA11D51EE9FE23A96; };
@@ -49,8 +51,10 @@
 		B2B91F99D0515E1AAA5E41BF = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SeedLoader.swift; path = PerkPilot/Services/SeedLoader.swift; sourceTree = SOURCE_ROOT; };
 		6D37B04ED80B5A1683B6E9B1 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DiscoveryService.swift; path = PerkPilot/Services/DiscoveryService.swift; sourceTree = SOURCE_ROOT; };
 		FF8FB5EDEE195642A4BE9278 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationService.swift; path = PerkPilot/Services/NotificationService.swift; sourceTree = SOURCE_ROOT; };
+		B957D47B28A656578531EC82 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Theme.swift; path = PerkPilot/Design/Theme.swift; sourceTree = SOURCE_ROOT; };
 		AC1EA63CC534585896CCA074 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContentView.swift; path = PerkPilot/Views/ContentView.swift; sourceTree = SOURCE_ROOT; };
 		B4A68ABEEEA65B5DA6526710 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TodayView.swift; path = PerkPilot/Views/TodayView.swift; sourceTree = SOURCE_ROOT; };
+		E548BC2385B457B18FBD1F85 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChecklistDetailView.swift; path = PerkPilot/Views/ChecklistDetailView.swift; sourceTree = SOURCE_ROOT; };
 		3C49579D45925564B0861555 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CardsView.swift; path = PerkPilot/Views/CardsView.swift; sourceTree = SOURCE_ROOT; };
 		C7F97B9BF02852898BC8B401 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CardDetailView.swift; path = PerkPilot/Views/CardDetailView.swift; sourceTree = SOURCE_ROOT; };
 		4591A8BDA11D51EE9FE23A96 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddCardView.swift; path = PerkPilot/Views/AddCardView.swift; sourceTree = SOURCE_ROOT; };
@@ -112,6 +116,7 @@
 			children = (
 				AC1EA63CC534585896CCA074,
 				B4A68ABEEEA65B5DA6526710,
+				E548BC2385B457B18FBD1F85,
 				3C49579D45925564B0861555,
 				C7F97B9BF02852898BC8B401,
 				4591A8BDA11D51EE9FE23A96,
@@ -120,6 +125,14 @@
 				D81A61166DB356C3A482743F,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		0E58B7DCBE3650BF8CAD1015 = {
+			isa = PBXGroup;
+			children = (
+				B957D47B28A656578531EC82,
+			);
+			name = Design;
 			sourceTree = "<group>";
 		};
 		6047DC3FB6B4517BBD089408 = {
@@ -139,6 +152,7 @@
 				E569AC4C0814555D91F2FB46,
 				E743E9A4060C5ADFB953F1B9,
 				1F0F65F6EF085805A3193480,
+				0E58B7DCBE3650BF8CAD1015,
 				6047DC3FB6B4517BBD089408,
 			);
 			name = PerkPilot;
@@ -282,8 +296,10 @@
 				ACB568051894563686085180,
 				E4AA5BDC005454CC8BD02AE2,
 				D6EDA0B5E7AD5A7784A1BC1A,
+				0EDCA7ABBAA658B89F0020D4,
 				1CAAE2743F1558B78ECE4EE0,
 				88B4D013DF0B5EFFB7723146,
+				5CB85483E2F7502A9A699627,
 				D7F36D68D74A52D196C3E62D,
 				5AE6A6F64248520498F833F4,
 				8E370784142E53AA87C85032,

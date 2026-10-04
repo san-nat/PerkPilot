@@ -13,6 +13,8 @@ struct ContentView: View {
                 .tabItem { Label("Cards", systemImage: "creditcard") }
             StatementsView()
                 .tabItem { Label("Statements", systemImage: "doc.text") }
+            AdvisorView()
+                .tabItem { Label("Advisor", systemImage: "wand.and.stars") }
             BenefitsLibraryView()
                 .tabItem { Label("Library", systemImage: "books.vertical") }
             NewsView()

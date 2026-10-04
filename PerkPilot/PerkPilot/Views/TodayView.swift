@@ -91,7 +91,60 @@ struct TodayView: View {
             gemsTile
             walletTile
             mutedTile
+            advisorTile
         }
+    }
+
+    /// "You're leaving ~$X/yr on the table" — top new-card idea, if any.
+    private var topNewCardNet: Double? {
+        let charges = TransactionStore.transactions(context: context).filter { $0.isCharge && $0.category.isSpend }
+        guard !charges.isEmpty else { return nil }
+        let docs = TransactionStore.documents(context: context)
+        let months = max(1, Set(docs.map(\.periodKey)).count)
+        let ytd = RewardsAdvisor.ytdSpendByCardCategory(charges)
+        let currentBest = RewardsAdvisor.currentBestPctByCategory(ytd: ytd)
+        let chaseCount = cards.filter { $0.issuer == "Chase" }.count
+        let verdicts = PortfolioAnalyzer.analyze(
+            transactions: charges, currentBestPct: currentBest,
+            monthsCovered: months, chaseCardsHeld: chaseCount)
+        guard let top = verdicts.first, top.netAnnualUSD >= 25 else { return nil }
+        return top.netAnnualUSD
+    }
+
+    private var advisorTile: some View {
+        NavigationLink(destination: AdvisorView(initialMode: .newIdeas)) {
+            BentoTile {
+                if let net = topNewCardNet {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Image(systemName: "wand.and.stars")
+                            .font(.title3)
+                            .foregroundStyle(PPTheme.gold)
+                            .accessibilityHidden(true)
+                        Spacer(minLength: 2)
+                        Text("~\(Int(net))")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .monospacedDigit()
+                        Text("Left on the table")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                        Text("A new card could earn this/yr")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
+                    }
+                } else {
+                    BentoStat(
+                        title: "Advisor",
+                        value: "Which card?",
+                        subtitle: "Best card per purchase + new card ideas",
+                        systemImage: "wand.and.stars",
+                        tint: PPTheme.gold
+                    )
+                }
+            }
+        }
+        .buttonStyle(.plain)
     }
 
     private var expiringTile: some View {

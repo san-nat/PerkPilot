@@ -99,6 +99,8 @@ later features can reuse them without touching views:
 | `CategoryEngine` | `Services/CategoryEngine.swift` | Pure keyword categorizer + merchant normalization + override precedence. No SwiftData. | **"Best card for this purchase" advisor**: categorize the purchase, then rank cards by category earn rate |
 | `RewardMatcher` | `Services/RewardMatcher.swift` | Heuristic benefit↔transaction matching (merchant keywords + expected-amount patterns), honest confidence levels | **Annual fee justification report**: sum detected credits per card vs. its annual fee |
 | `TransactionStore` | `Services/TransactionStore.swift` | The only doorway to statement data: import, search, aggregates, recategorize-with-learning, deletion | Everything above |
+| `RewardsAdvisor` | `Services/RewardsAdvisor.swift` | Bundled 12-card earn-rate table (caps, merchant boosts) + conservative point valuations (UR 1.5¢, MR 1.0¢, SkyMiles 1.0¢) + `bestCard()` ranking | "Which card?" lookup |
+| `PortfolioAnalyzer` | `Services/PortfolioAnalyzer.swift` | ~12-candidate new-card database; incremental net-value math vs current best rates with overlap exclusions (e.g. Whole Foods spend excluded from Amex Gold grocery case) and 5/24 cautions | "New card ideas" screen |
 
 ## Privacy
 

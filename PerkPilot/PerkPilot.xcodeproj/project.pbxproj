@@ -17,6 +17,9 @@
 		825514A3CE8854829836C616 = {isa = PBXBuildFile; fileRef = 1291993694695AC193F464E5; };
 		89492AFFDEE15F198B9519A5 = {isa = PBXBuildFile; fileRef = F3271502192A588CA5E493D0; };
 		ACB568051894563686085180 = {isa = PBXBuildFile; fileRef = B2B91F99D0515E1AAA5E41BF; };
+		92EBE99368A75A758636DAD1 = {isa = PBXBuildFile; fileRef = FB5177EA83AD59CC90B95726; };
+		80D7A710D48A5AF5A6D6D5ED = {isa = PBXBuildFile; fileRef = D1802E5A56B25B10A14EC1AE; };
+		47AD0DDFBB6959FF98A85419 = {isa = PBXBuildFile; fileRef = AE55726A154155D2867F789B; };
 		E4AA5BDC005454CC8BD02AE2 = {isa = PBXBuildFile; fileRef = 6D37B04ED80B5A1683B6E9B1; };
 		D6EDA0B5E7AD5A7784A1BC1A = {isa = PBXBuildFile; fileRef = FF8FB5EDEE195642A4BE9278; };
 		77222DDC775F5024ACFDFEEC = {isa = PBXBuildFile; fileRef = 8E5C91CF0A6454198C70C239; };
@@ -40,11 +43,13 @@
 		72B04BE2D5C25389979573F9 = {isa = PBXBuildFile; fileRef = AE69CB7A32255A6DA1D8DB3E; };
 		2FD2A000000B5CABA80F63FF = {isa = PBXBuildFile; fileRef = 6F930F0A42A65FE4B2D7D6D5; };
 		A1B9A3FE8B4B5857AF8A487F = {isa = PBXBuildFile; fileRef = 6C683DD6F6265C9CA32258F9; };
+		4ACBCDE08D965B0C8FF636E9 = {isa = PBXBuildFile; fileRef = 3B8B8CC0FA8F5F0494772A28; };
 		EF50ECE57CA55718927290A1 = {isa = PBXBuildFile; fileRef = 77CD3F1D059859248CB608D2; };
 		1D360988D87159DF8FA35448 = {isa = PBXBuildFile; fileRef = 8A8456B07BCB506B9C8FC2D0; };
 		FFF5334592B05EEA90E726EA = {isa = PBXBuildFile; fileRef = E450E4D40FCF580FABFEAD8B; };
 		07102DFD11985EFE8FA83ABF = {isa = PBXBuildFile; fileRef = D987E15D2B865737A4608AB4; };
 		205A18FC8B41531AB3169998 = {isa = PBXBuildFile; fileRef = E3A7CBA3EF705AC19377741B; };
+		0EAB398AA28354B3B59DF76A = {isa = PBXBuildFile; fileRef = 50D375488BD459DE94DF961D; };
 		7E050FD373915F0D8210C03A = {isa = PBXBuildFile; fileRef = 77CD3F1D059859248CB608D2; };
 		B56627EAA0355C6BBB46A907 = {isa = PBXBuildFile; fileRef = 8A8456B07BCB506B9C8FC2D0; };
 /* End PBXBuildFile section */
@@ -64,6 +69,9 @@
 		1291993694695AC193F464E5 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StatementModels.swift; path = PerkPilot/Models/StatementModels.swift; sourceTree = SOURCE_ROOT; };
 		F3271502192A588CA5E493D0 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RecurrenceEngine.swift; path = PerkPilot/Services/RecurrenceEngine.swift; sourceTree = SOURCE_ROOT; };
 		B2B91F99D0515E1AAA5E41BF = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SeedLoader.swift; path = PerkPilot/Services/SeedLoader.swift; sourceTree = SOURCE_ROOT; };
+		FB5177EA83AD59CC90B95726 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AskParser.swift; path = PerkPilot/Services/AskParser.swift; sourceTree = SOURCE_ROOT; };
+		D1802E5A56B25B10A14EC1AE = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AskAnswerer.swift; path = PerkPilot/Services/AskAnswerer.swift; sourceTree = SOURCE_ROOT; };
+		AE55726A154155D2867F789B = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SpeechService.swift; path = PerkPilot/Services/SpeechService.swift; sourceTree = SOURCE_ROOT; };
 		6D37B04ED80B5A1683B6E9B1 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DiscoveryService.swift; path = PerkPilot/Services/DiscoveryService.swift; sourceTree = SOURCE_ROOT; };
 		FF8FB5EDEE195642A4BE9278 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationService.swift; path = PerkPilot/Services/NotificationService.swift; sourceTree = SOURCE_ROOT; };
 		8E5C91CF0A6454198C70C239 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StatementParser.swift; path = PerkPilot/Services/StatementParser.swift; sourceTree = SOURCE_ROOT; };
@@ -87,12 +95,14 @@
 		AE69CB7A32255A6DA1D8DB3E = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StatementsView.swift; path = PerkPilot/Views/StatementsView.swift; sourceTree = SOURCE_ROOT; };
 		6F930F0A42A65FE4B2D7D6D5 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RewardsCheckView.swift; path = PerkPilot/Views/RewardsCheckView.swift; sourceTree = SOURCE_ROOT; };
 		6C683DD6F6265C9CA32258F9 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AdvisorView.swift; path = PerkPilot/Views/AdvisorView.swift; sourceTree = SOURCE_ROOT; };
+		3B8B8CC0FA8F5F0494772A28 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AskView.swift; path = PerkPilot/Views/AskView.swift; sourceTree = SOURCE_ROOT; };
 		77CD3F1D059859248CB608D2 = {isa = PBXFileReference; lastKnownFileType = text.json; name = SeedData-A.json; path = PerkPilot/Resources/SeedData-A.json; sourceTree = SOURCE_ROOT; };
 		8A8456B07BCB506B9C8FC2D0 = {isa = PBXFileReference; lastKnownFileType = text.json; name = SeedData-B.json; path = PerkPilot/Resources/SeedData-B.json; sourceTree = SOURCE_ROOT; };
 		53E27CDFE05B5515B1678398 = {isa = PBXFileReference; lastKnownFileType = text.plist; name = Info.plist; path = PerkPilot/Info.plist; sourceTree = SOURCE_ROOT; };
 		E450E4D40FCF580FABFEAD8B = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PerkPilotTests.swift; path = PerkPilotTests/PerkPilotTests.swift; sourceTree = SOURCE_ROOT; };
 		D987E15D2B865737A4608AB4 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StatementTests.swift; path = PerkPilotTests/StatementTests.swift; sourceTree = SOURCE_ROOT; };
 		E3A7CBA3EF705AC19377741B = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AdvisorTests.swift; path = PerkPilotTests/AdvisorTests.swift; sourceTree = SOURCE_ROOT; };
+		50D375488BD459DE94DF961D = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AskTests.swift; path = PerkPilotTests/AskTests.swift; sourceTree = SOURCE_ROOT; };
 		60B7B6018D245852B30D7DD3 = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PerkPilot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E30F65814ADE59C9BA47DB38 = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PerkPilotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -134,6 +144,9 @@
 			children = (
 				F3271502192A588CA5E493D0,
 				B2B91F99D0515E1AAA5E41BF,
+				FB5177EA83AD59CC90B95726,
+				D1802E5A56B25B10A14EC1AE,
+				AE55726A154155D2867F789B,
 				6D37B04ED80B5A1683B6E9B1,
 				FF8FB5EDEE195642A4BE9278,
 				8E5C91CF0A6454198C70C239,
@@ -163,6 +176,7 @@
 				AE69CB7A32255A6DA1D8DB3E,
 				6F930F0A42A65FE4B2D7D6D5,
 				6C683DD6F6265C9CA32258F9,
+				3B8B8CC0FA8F5F0494772A28,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -205,6 +219,7 @@
 				E450E4D40FCF580FABFEAD8B,
 				D987E15D2B865737A4608AB4,
 				E3A7CBA3EF705AC19377741B,
+				50D375488BD459DE94DF961D,
 			);
 			name = PerkPilotTests;
 			path = PerkPilotTests;
@@ -337,6 +352,9 @@
 				825514A3CE8854829836C616,
 				89492AFFDEE15F198B9519A5,
 				ACB568051894563686085180,
+				92EBE99368A75A758636DAD1,
+				80D7A710D48A5AF5A6D6D5ED,
+				47AD0DDFBB6959FF98A85419,
 				E4AA5BDC005454CC8BD02AE2,
 				D6EDA0B5E7AD5A7784A1BC1A,
 				77222DDC775F5024ACFDFEEC,
@@ -360,6 +378,7 @@
 				72B04BE2D5C25389979573F9,
 				2FD2A000000B5CABA80F63FF,
 				A1B9A3FE8B4B5857AF8A487F,
+				4ACBCDE08D965B0C8FF636E9,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,6 +389,7 @@
 				FFF5334592B05EEA90E726EA,
 				07102DFD11985EFE8FA83ABF,
 				205A18FC8B41531AB3169998,
+				0EAB398AA28354B3B59DF76A,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

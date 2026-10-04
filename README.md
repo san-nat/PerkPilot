@@ -101,6 +101,17 @@ later features can reuse them without touching views:
 | `TransactionStore` | `Services/TransactionStore.swift` | The only doorway to statement data: import, search, aggregates, recategorize-with-learning, deletion | Everything above |
 | `RewardsAdvisor` | `Services/RewardsAdvisor.swift` | Bundled 12-card earn-rate table (caps, merchant boosts) + conservative point valuations (UR 1.5¢, MR 1.0¢, SkyMiles 1.0¢) + `bestCard()` ranking | "Which card?" lookup |
 | `PortfolioAnalyzer` | `Services/PortfolioAnalyzer.swift` | ~12-candidate new-card database; incremental net-value math vs current best rates with overlap exclusions (e.g. Whole Foods spend excluded from Amex Gold grocery case) and 5/24 cautions | "New card ideas" screen |
+| `AskParser` / `AskAnswerer` | `Services/AskParser.swift`, `Services/AskAnswerer.swift` | Free-text "which card?" parsing (amount + category/merchant) and expiring-credit-first answer composition with earn-rate stacking | "Ask PerkPilot" conversational tab |
+
+## Privacy
+
+Everything lives on-device in SwiftData. No card numbers, no bank logins, no
+analytics, no network calls in Phase 1 — with one disclosed exception: the
+**Ask tab's voice input** uses Apple's Speech framework, which may process
+short audio clips on Apple servers (on-device recognition is preferred when
+the device supports it). Voice is optional; typing always works. The discovery
+pipeline (Phase 2) is deliberately server-side so provider API secrets never
+ship in the app.
 
 ## Privacy
 

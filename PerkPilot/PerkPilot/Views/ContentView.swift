@@ -9,6 +9,8 @@ struct ContentView: View {
         TabView {
             TodayView()
                 .tabItem { Label("Today", systemImage: "checklist") }
+            AskView()
+                .tabItem { Label("Ask", systemImage: "mic") }
             CardsView()
                 .tabItem { Label("Cards", systemImage: "creditcard") }
             StatementsView()

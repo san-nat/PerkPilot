@@ -30,6 +30,9 @@ APP_SOURCES = [
     "PerkPilot/Models/StatementModels.swift",
     "PerkPilot/Services/RecurrenceEngine.swift",
     "PerkPilot/Services/SeedLoader.swift",
+    "PerkPilot/Services/AskParser.swift",
+    "PerkPilot/Services/AskAnswerer.swift",
+    "PerkPilot/Services/SpeechService.swift",
     "PerkPilot/Services/DiscoveryService.swift",
     "PerkPilot/Services/NotificationService.swift",
     "PerkPilot/Services/StatementParser.swift",
@@ -53,13 +56,14 @@ APP_SOURCES = [
     "PerkPilot/Views/StatementsView.swift",
     "PerkPilot/Views/RewardsCheckView.swift",
     "PerkPilot/Views/AdvisorView.swift",
+    "PerkPilot/Views/AskView.swift",
 ]
 SEED_JSONS = [
     "PerkPilot/Resources/SeedData-A.json",
     "PerkPilot/Resources/SeedData-B.json",
 ]
 INFO_PLIST = "PerkPilot/Info.plist"
-TEST_SOURCES = ["PerkPilotTests/PerkPilotTests.swift", "PerkPilotTests/StatementTests.swift", "PerkPilotTests/AdvisorTests.swift"]
+TEST_SOURCES = ["PerkPilotTests/PerkPilotTests.swift", "PerkPilotTests/StatementTests.swift", "PerkPilotTests/AdvisorTests.swift", "PerkPilotTests/AskTests.swift"]
 
 FILETYPE = {p: "sourcecode.swift" for p in APP_SOURCES + TEST_SOURCES}
 for _p in SEED_JSONS:

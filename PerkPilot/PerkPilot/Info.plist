@@ -22,6 +22,10 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>PerkPilot uses the microphone so you can ask which card to use by voice. You can always type instead.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>PerkPilot transcribes your spoken questions to recommend the best card. Transcription uses Apple's speech service, which may process short audio clips on Apple servers; your cards, statements, and answers never leave this device.</string>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

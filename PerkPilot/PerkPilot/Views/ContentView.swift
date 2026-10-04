@@ -11,6 +11,8 @@ struct ContentView: View {
                 .tabItem { Label("Today", systemImage: "checklist") }
             CardsView()
                 .tabItem { Label("Cards", systemImage: "creditcard") }
+            StatementsView()
+                .tabItem { Label("Statements", systemImage: "doc.text") }
             BenefitsLibraryView()
                 .tabItem { Label("Library", systemImage: "books.vertical") }
             NewsView()
@@ -44,5 +46,8 @@ struct ContentView: View {
             TipItem.self,
             CompletionRecord.self,
             MutedReward.self,
+            StatementDocument.self,
+            BankTransaction.self,
+            MerchantCategoryOverride.self,
         ], inMemory: true)
 }

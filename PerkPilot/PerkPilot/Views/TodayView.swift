@@ -46,6 +46,19 @@ struct TodayView: View {
         activeBenefits.filter(\.lesserKnown).count
     }
 
+    private var currentMonthKey: String {
+        RecurrenceEngine.periodKey(cadence: .monthly, date: now) ?? ""
+    }
+
+    private var monthSpend: Double {
+        TransactionStore.monthlySpendTotal(periodKey: currentMonthKey, context: context)
+    }
+
+    private var topSpendCategory: String {
+        TransactionStore.monthlySpendByCategory(periodKey: currentMonthKey, context: context)
+            .first?.category.displayName ?? "No data"
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -73,6 +86,7 @@ struct TodayView: View {
                 .gridCellColumns(2)
             quarterTile
             creditsTile
+            spendTile
             loungeTile
             gemsTile
             walletTile
@@ -154,6 +168,21 @@ struct TodayView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+            }
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var spendTile: some View {
+        NavigationLink(destination: StatementsView(initialSection: .spend)) {
+            BentoTile {
+                BentoStat(
+                    title: monthSpend > 0 ? "Spent this month" : "Month spend",
+                    value: monthSpend > 0 ? monthSpend.formatted(.currency(code: "USD")) : "—",
+                    subtitle: monthSpend > 0 ? "Top: \(topSpendCategory)" : "Import a statement",
+                    systemImage: "chart.pie.fill",
+                    tint: .teal
+                )
             }
         }
         .buttonStyle(.plain)
@@ -352,5 +381,8 @@ struct ChecklistRow: View {
             TipItem.self,
             CompletionRecord.self,
             MutedReward.self,
+            StatementDocument.self,
+            BankTransaction.self,
+            MerchantCategoryOverride.self,
         ], inMemory: true)
 }

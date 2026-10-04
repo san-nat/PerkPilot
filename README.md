@@ -22,6 +22,13 @@ turns "use it or lose it" into a monthly checklist.
   be unmuted anytime.
 - **Monthly reminder** — one quiet local notification on the 28th of each
   month. No account, no server, no tracking.
+- **Statement Intelligence** — import CSV (first-class) or PDF (best-effort)
+  statements per card per month. Spend auto-categorizes by keyword with
+  per-merchant learning when you recategorize; search every transaction by
+  merchant, amount, card, category, or date; and the **rewards check** shows
+  whether each monthly credit was *likely received* by heuristically matching
+  statement charges — always labeled as heuristic, never bank-verified, with
+  one-tap confirm feeding the checklist.
 - **News tab** — reserved for the Phase 2 discovery feed (currently a
   placeholder explaining what's coming).
 
@@ -80,11 +87,30 @@ To rebuild the seed bundle from research JSONs:
 python3 tools/normalize_seed.py
 ```
 
+## Service seams (for future features)
+
+Statement Intelligence is built as four clean, UI-independent services so
+later features can reuse them without touching views:
+
+| Service | File | Owns | Future use |
+|---|---|---|---|
+| `StatementParser` | `Services/StatementParser.swift` | CSV parsing: issuer-profile auto-detect, manual `ColumnMapping` fallback, sign normalization, row-level warnings. Never invents rows. | Reused by any bulk import |
+| `PDFStatementParser` | `Services/PDFStatementParser.swift` | PDFKit text extraction + line-item heuristics with confidence scores | Swap in a better engine later |
+| `CategoryEngine` | `Services/CategoryEngine.swift` | Pure keyword categorizer + merchant normalization + override precedence. No SwiftData. | **"Best card for this purchase" advisor**: categorize the purchase, then rank cards by category earn rate |
+| `RewardMatcher` | `Services/RewardMatcher.swift` | Heuristic benefit↔transaction matching (merchant keywords + expected-amount patterns), honest confidence levels | **Annual fee justification report**: sum detected credits per card vs. its annual fee |
+| `TransactionStore` | `Services/TransactionStore.swift` | The only doorway to statement data: import, search, aggregates, recategorize-with-learning, deletion | Everything above |
+
 ## Privacy
 
 Everything lives on-device in SwiftData. No card numbers, no bank logins, no
 analytics, no network calls in Phase 1. The discovery pipeline (Phase 2) is
 deliberately server-side so provider API secrets never ship in the app.
+
+**Statement data is extra-sensitive and treated that way:** imported
+statements are parsed on-device and the raw files are never persisted or
+uploaded — only parsed transaction rows are stored, in the same on-device
+SwiftData store. Statements are explicitly excluded from any future sync
+design. The app's import screens and Settings say this in plain language.
 
 ## License
 

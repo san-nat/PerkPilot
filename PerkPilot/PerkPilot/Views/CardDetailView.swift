@@ -11,8 +11,13 @@ struct CardDetailView: View {
 
     @State private var expandedBenefits = Set<String>()
     @State private var showingArchiveConfirm = false
+    @State private var showingStatementImport = false
 
     private var mutedIds: Set<String> { Set(mutes.map(\.benefitStableId)) }
+
+    private var cardDocuments: [StatementDocument] {
+        TransactionStore.documents(cardStableId: card.stableId, context: context)
+    }
 
     private var mutedCount: Int {
         Set(card.benefits.map(\.stableId)).intersection(mutedIds).count
@@ -69,7 +74,46 @@ struct CardDetailView: View {
                 }
             }
 
-            ForEach(grouped) { group in
+            Section("Statements") {
+                if cardDocuments.isEmpty {
+                    Text("No statements imported for this card yet.")
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(cardDocuments, id: \.stableId) { doc in
+                        HStack {
+                            Image(systemName: doc.source == .pdf ? "doc.richtext" : "tablecells")
+                                .foregroundStyle(.secondary)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(doc.periodKey)
+                                    .font(.callout)
+                                Text("\(doc.transactionCount) transactions · \(doc.fileName)")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                            }
+                            Spacer()
+                            if doc.lowConfidenceCount > 0 {
+                                Image(systemName: "exclamationmark.triangle")
+                                    .foregroundStyle(.orange)
+                                    .accessibilityLabel("\(doc.lowConfidenceCount) low-confidence rows")
+                            }
+                        }
+                    }
+                }
+                Button {
+                    showingStatementImport = true
+                } label: {
+                    Label("Import statement…", systemImage: "square.and.arrow.down")
+                }
+                NavigationLink(destination: RewardsCheckView()) {
+                    Label("Check rewards received", systemImage: "checkmark.shield")
+                }
+            } footer: {
+                Text("Statements stay on this iPhone — parsed here, never uploaded.")
+            }
+
+            ForEach(grouped) { group in in
                 Section(group.cadence.displayName) {
                     ForEach(group.benefits, id: \.stableId) { benefit in
                         BenefitRow(
@@ -100,6 +144,9 @@ struct CardDetailView: View {
         }
         .navigationTitle(card.canonicalName)
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showingStatementImport) {
+            StatementImportView(preselectedCardStableId: card.stableId)
+        }
         .confirmationDialog(
             "Archive \(card.canonicalName)?",
             isPresented: $showingArchiveConfirm,

@@ -13,6 +13,9 @@ struct PerkPilotApp: App {
             TipItem.self,
             CompletionRecord.self,
             MutedReward.self,
+            StatementDocument.self,
+            BankTransaction.self,
+            MerchantCategoryOverride.self,
         ])
     }
 }

@@ -9,6 +9,12 @@ struct SettingsView: View {
     @State private var showingResetConfirm = false
     @State private var statusMessage: String?
 
+    @Query private var documents: [StatementDocument]
+    @Query private var transactions: [BankTransaction]
+
+    private var statementCount: Int { documents.count }
+    private var transactionCount: Int { transactions.count }
+
     var body: some View {
         NavigationStack {
             List {
@@ -39,16 +45,34 @@ struct SettingsView: View {
                     }
                 }
 
+                Section("Statements & privacy") {
+                    LabeledContent("Imported statements", value: "\(statementCount)")
+                    LabeledContent("Transactions", value: "\(transactionCount)")
+                    Label(
+                        "Statement data stays on this iPhone. It's parsed on-device, never uploaded, and excluded from any future sync.",
+                        systemImage: "lock.shield"
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    Button("Delete all statements", role: .destructive) {
+                        TransactionStore.deleteAllStatements(context: context)
+                        statusMessage = "All statements and transactions deleted."
+                    }
+                }
+
                 Section {
                     Button("Reset all data", role: .destructive) {
                         showingResetConfirm = true
                     }
                 } footer: {
-                    Text("Deletes every card, benefit, checkmark, mute, and archive. The seed catalog re-imports on next launch.")
+                    Text("Deletes every card, benefit, checkmark, mute, archive, and imported statement. The seed catalog re-imports on next launch.")
                 }
 
                 Section("About") {
                     Text("PerkPilot tracks expiring credit-card benefits so you use them before they reset. Benefits ship with sources; nothing here is financial advice.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Text("Statement Intelligence is heuristic: reward matching suggests, never verifies, whether a credit was used. Imported statements never leave this device.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     LabeledContent("Version", value: "1.0")
@@ -82,6 +106,9 @@ struct SettingsView: View {
             try context.delete(model: CardItem.self)
             try context.delete(model: CompletionRecord.self)
             try context.delete(model: MutedReward.self)
+            try context.delete(model: StatementDocument.self)
+            try context.delete(model: BankTransaction.self)
+            try context.delete(model: MerchantCategoryOverride.self)
             try context.save()
             UserDefaults.standard.removeObject(forKey: "perkPilot.seedCatalogVersion")
             statusMessage = "All data deleted. Relaunch to re-import the catalog."
@@ -99,5 +126,8 @@ struct SettingsView: View {
             TipItem.self,
             CompletionRecord.self,
             MutedReward.self,
+            StatementDocument.self,
+            BankTransaction.self,
+            MerchantCategoryOverride.self,
         ], inMemory: true)
 }

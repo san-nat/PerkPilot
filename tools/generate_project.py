@@ -27,10 +27,16 @@ APP_SOURCES = [
     "PerkPilot/Models/TipItem.swift",
     "PerkPilot/Models/CompletionRecord.swift",
     "PerkPilot/Models/MutedReward.swift",
+    "PerkPilot/Models/StatementModels.swift",
     "PerkPilot/Services/RecurrenceEngine.swift",
     "PerkPilot/Services/SeedLoader.swift",
     "PerkPilot/Services/DiscoveryService.swift",
     "PerkPilot/Services/NotificationService.swift",
+    "PerkPilot/Services/StatementParser.swift",
+    "PerkPilot/Services/PDFStatementParser.swift",
+    "PerkPilot/Services/CategoryEngine.swift",
+    "PerkPilot/Services/RewardMatcher.swift",
+    "PerkPilot/Services/TransactionStore.swift",
     "PerkPilot/Design/Theme.swift",
     "PerkPilot/Views/ContentView.swift",
     "PerkPilot/Views/TodayView.swift",
@@ -41,13 +47,16 @@ APP_SOURCES = [
     "PerkPilot/Views/BenefitsLibraryView.swift",
     "PerkPilot/Views/NewsView.swift",
     "PerkPilot/Views/SettingsView.swift",
+    "PerkPilot/Views/StatementImportView.swift",
+    "PerkPilot/Views/StatementsView.swift",
+    "PerkPilot/Views/RewardsCheckView.swift",
 ]
 SEED_JSONS = [
     "PerkPilot/Resources/SeedData-A.json",
     "PerkPilot/Resources/SeedData-B.json",
 ]
 INFO_PLIST = "PerkPilot/Info.plist"
-TEST_SOURCES = ["PerkPilotTests/PerkPilotTests.swift"]
+TEST_SOURCES = ["PerkPilotTests/PerkPilotTests.swift", "PerkPilotTests/StatementTests.swift"]
 
 FILETYPE = {p: "sourcecode.swift" for p in APP_SOURCES + TEST_SOURCES}
 for _p in SEED_JSONS:

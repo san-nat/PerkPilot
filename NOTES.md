@@ -66,3 +66,13 @@ architecture plan exactly.
 - Add an AppIcon, a privacy policy URL, and support contact before submitting.
 - If monetized later, Reddit's commercial data-use terms become a launch gate
   for the Phase 2 discovery pipeline (see architecture plan).
+
+## 2026-10-04: seed catalog split for transfer
+- `SeedData.json` (237KB) exceeded the GitHub MCP tool's per-request argument
+  limit, so the catalog now ships as `SeedData-A.json` (cards 1–6) +
+  `SeedData-B.json` (cards 7–12). `SeedLoader.loadManifest()` and the
+  `SeedContractTests` helper merge both parts; the merged catalog is
+  byte-identical in content to the original single file (12 cards, 238
+  benefits, same stable IDs). `tools/generate_project.py` was updated and
+  `project.pbxproj` regenerated — both JSONs are in the app and test
+  targets' resource phases.

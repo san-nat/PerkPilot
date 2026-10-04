@@ -40,15 +40,19 @@ APP_SOURCES = [
     "PerkPilot/Views/NewsView.swift",
     "PerkPilot/Views/SettingsView.swift",
 ]
-SEED_JSON = "PerkPilot/Resources/SeedData.json"
+SEED_JSONS = [
+    "PerkPilot/Resources/SeedData-A.json",
+    "PerkPilot/Resources/SeedData-B.json",
+]
 INFO_PLIST = "PerkPilot/Info.plist"
 TEST_SOURCES = ["PerkPilotTests/PerkPilotTests.swift"]
 
 FILETYPE = {p: "sourcecode.swift" for p in APP_SOURCES + TEST_SOURCES}
-FILETYPE[SEED_JSON] = "text.json"
+for _p in SEED_JSONS:
+    FILETYPE[_p] = "text.json"
 FILETYPE[INFO_PLIST] = "text.plist"
 
-ALL_FILES = APP_SOURCES + [SEED_JSON, INFO_PLIST] + TEST_SOURCES
+ALL_FILES = APP_SOURCES + SEED_JSONS + [INFO_PLIST] + TEST_SOURCES
 
 # Precompute every UUID so sections can be emitted in canonical order.
 U = {}
@@ -105,10 +109,12 @@ def gen() -> str:
     section(L, "PBXBuildFile")
     for p in APP_SOURCES:
         L.append(f"\t\t{U['buildfile:app:' + p]} = {{isa = PBXBuildFile; fileRef = {U['fileref:' + p]}; }};")
-    L.append(f"\t\t{U['buildfile:app:' + SEED_JSON]} = {{isa = PBXBuildFile; fileRef = {U['fileref:' + SEED_JSON]}; }};")
+    for _p in SEED_JSONS:
+        L.append(f"\t\t{U['buildfile:app:' + _p]} = {{isa = PBXBuildFile; fileRef = {U['fileref:' + _p]}; }};")
     for p in TEST_SOURCES:
         L.append(f"\t\t{U['buildfile:test:' + p]} = {{isa = PBXBuildFile; fileRef = {U['fileref:' + p]}; }};")
-    L.append(f"\t\t{U['buildfile:test:' + SEED_JSON]} = {{isa = PBXBuildFile; fileRef = {U['fileref:' + SEED_JSON]}; }};")
+    for _p in SEED_JSONS:
+        L.append(f"\t\t{U['buildfile:test:' + _p]} = {{isa = PBXBuildFile; fileRef = {U['fileref:' + _p]}; }};")
     end_section(L, "PBXBuildFile")
 
     # ---- PBXContainerItemProxy ----
@@ -177,7 +183,7 @@ def gen() -> str:
     emit_group("models", [fr(p) for p in APP_SOURCES if "/Models/" in p], name="Models")
     emit_group("services", [fr(p) for p in APP_SOURCES if "/Services/" in p], name="Services")
     emit_group("views", [fr(p) for p in APP_SOURCES if "/Views/" in p], name="Views")
-    emit_group("resources", [fr(SEED_JSON)], name="Resources")
+    emit_group("resources", [fr(_p) for _p in SEED_JSONS], name="Resources")
     emit_group(
         "app",
         [fr("PerkPilot/PerkPilotApp.swift"), fr(INFO_PLIST),
@@ -252,8 +258,8 @@ def gen() -> str:
     end_section(L, "PBXProject")
 
     section(L, "PBXResourcesBuildPhase")
-    emit_phase("app-resources", "PBXResourcesBuildPhase", [U["buildfile:app:" + SEED_JSON]])
-    emit_phase("test-resources", "PBXResourcesBuildPhase", [U["buildfile:test:" + SEED_JSON]])
+    emit_phase("app-resources", "PBXResourcesBuildPhase", [U["buildfile:app:" + _p] for _p in SEED_JSONS])
+    emit_phase("test-resources", "PBXResourcesBuildPhase", [U["buildfile:test:" + _p] for _p in SEED_JSONS])
     end_section(L, "PBXResourcesBuildPhase")
 
     section(L, "PBXSourcesBuildPhase")

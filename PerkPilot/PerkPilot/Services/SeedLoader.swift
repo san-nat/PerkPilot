@@ -52,15 +52,46 @@ enum SeedLoader {
         UserDefaults.standard.string(forKey: versionKey)
     }
 
-    /// Loads the bundled manifest, throwing on any contract violation.
+    /// Loads the bundled manifests (SeedData-A.json + SeedData-B.json — the
+    /// catalog is split in two only because of source-control transfer
+    /// limits; the merged result is identical to the single researched
+    /// catalog) and merges them into one manifest, throwing on any
+    /// contract violation.
     static func loadManifest() throws -> SeedManifest {
-        guard let url = Bundle.main.url(forResource: "SeedData", withExtension: "json") else {
-            throw SeedError.missingBundle
+        let parts = ["SeedData-A", "SeedData-B"]
+        var cards: [SeedCard] = []
+        var version: String?
+        var schema = 0
+        var locale = "en-US"
+        var exported = ""
+        for name in parts {
+            guard let url = Bundle.main.url(forResource: name, withExtension: "json") else {
+                throw SeedError.missingBundle
+            }
+            let data = try Data(contentsOf: url)
+            let manifest = try JSONDecoder().decode(SeedManifest.self, from: data)
+            // Per-part counts must be self-consistent before merging.
+            guard manifest.cards.count == manifest.cardCount,
+                  manifest.cards.flatMap(\.benefits).count == manifest.benefitCount
+            else { throw SeedError.countMismatch(name) }
+            version = version ?? manifest.catalogVersion
+            schema = manifest.schemaVersion
+            locale = manifest.locale
+            exported = manifest.exportedAt
+            cards += manifest.cards
         }
-        let data = try Data(contentsOf: url)
-        let manifest = try JSONDecoder().decode(SeedManifest.self, from: data)
-        try validate(manifest)
-        return manifest
+        let merged = SeedManifest(
+            catalogVersion: version ?? "unknown",
+            schemaVersion: schema,
+            locale: locale,
+            exportedAt: exported,
+            cardCount: cards.count,
+            benefitCount: cards.flatMap(\.benefits).count,
+            checksum: "merged",
+            cards: cards
+        )
+        try validate(merged)
+        return merged
     }
 
     /// Contract checks: counts, stable-ID uniqueness, cadence vocabulary,

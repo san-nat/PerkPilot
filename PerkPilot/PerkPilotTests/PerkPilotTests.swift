@@ -114,12 +114,29 @@ final class RecurrenceEngineTests: XCTestCase {
 
 final class SeedContractTests: XCTestCase {
     private func loadManifest() throws -> SeedManifest {
+        // Catalog ships as two manifests (see SeedLoader); merge like the app does.
         let bundle = Bundle(for: Self.self)
-        guard let url = bundle.url(forResource: "SeedData", withExtension: "json") else {
-            throw SeedError.missingBundle
+        var cards: [SeedCard] = []
+        var version = "unknown"
+        for name in ["SeedData-A", "SeedData-B"] {
+            guard let url = bundle.url(forResource: name, withExtension: "json") else {
+                throw SeedError.missingBundle
+            }
+            let data = try Data(contentsOf: url)
+            let part = try JSONDecoder().decode(SeedManifest.self, from: data)
+            version = part.catalogVersion
+            cards += part.cards
         }
-        let data = try Data(contentsOf: url)
-        return try JSONDecoder().decode(SeedManifest.self, from: data)
+        return SeedManifest(
+            catalogVersion: version,
+            schemaVersion: 1,
+            locale: "en-US",
+            exportedAt: "",
+            cardCount: cards.count,
+            benefitCount: cards.flatMap(\.benefits).count,
+            checksum: "merged",
+            cards: cards
+        )
     }
 
     func testSeedCounts() throws {

@@ -39,6 +39,7 @@ APP_SOURCES = [
     "PerkPilot/Services/PDFStatementParser.swift",
     "PerkPilot/Services/CategoryEngine.swift",
     "PerkPilot/Services/RewardMatcher.swift",
+    "PerkPilot/Services/SpendAuditService.swift",
     "PerkPilot/Services/TransactionStore.swift",
     "PerkPilot/Services/RewardsAdvisor.swift",
     "PerkPilot/Services/PortfolioAnalyzer.swift",
@@ -55,6 +56,7 @@ APP_SOURCES = [
     "PerkPilot/Views/StatementImportView.swift",
     "PerkPilot/Views/StatementsView.swift",
     "PerkPilot/Views/RewardsCheckView.swift",
+    "PerkPilot/Views/AuditView.swift",
     "PerkPilot/Views/AdvisorView.swift",
     "PerkPilot/Views/AskView.swift",
 ]
@@ -63,7 +65,7 @@ SEED_JSONS = [
     "PerkPilot/Resources/SeedData-B.json",
 ]
 INFO_PLIST = "PerkPilot/Info.plist"
-TEST_SOURCES = ["PerkPilotTests/PerkPilotTests.swift", "PerkPilotTests/StatementTests.swift", "PerkPilotTests/AdvisorTests.swift", "PerkPilotTests/AskTests.swift"]
+TEST_SOURCES = ["PerkPilotTests/PerkPilotTests.swift", "PerkPilotTests/StatementTests.swift", "PerkPilotTests/AdvisorTests.swift", "PerkPilotTests/AskTests.swift", "PerkPilotTests/AuditTests.swift"]
 
 FILETYPE = {p: "sourcecode.swift" for p in APP_SOURCES + TEST_SOURCES}
 for _p in SEED_JSONS:

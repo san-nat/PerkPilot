@@ -111,10 +111,52 @@ struct TodayView: View {
         return top.netAnnualUSD
     }
 
+    /// Missed Rewards Audit hero: "You're leaving $X on the table" from
+    /// actuals (missed earn + expired credits). Falls back to the new-card
+    /// ideas tile when there are no statements to audit yet.
+    private var auditReport: AuditReport? {
+        let charges = TransactionStore.transactions(context: context)
+        guard !charges.isEmpty else { return nil }
+        let r = SpendAuditService.audit(
+            transactions: charges, cards: cards,
+            completions: completions, mutes: mutes,
+            documents: TransactionStore.documents(context: context)
+        )
+        return r.analyzedCount > 0 ? r : nil
+    }
+
     private var advisorTile: some View {
-        NavigationLink(destination: AdvisorView(initialMode: .newIdeas)) {
+        NavigationLink(destination: auditDestination) {
             BentoTile {
-                if let net = topNewCardNet {
+                if let r = auditReport, r.totalMissedUSD >= 1 {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Image(systemName: "chart.line.downtrend.xaxis")
+                            .font(.title3)
+                            .foregroundStyle(PPTheme.gold)
+                            .accessibilityHidden(true)
+                        Spacer(minLength: 2)
+                        Text(r.totalMissedUSD.formatted(.currency(code: "USD").precision(.fractionLength(0))))
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(PPTheme.gold)
+                            .monospacedDigit()
+                        Text("Left on the table")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                        Text("Missed rewards this year — tap for the audit")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
+                    }
+                } else if let r = auditReport {
+                    BentoStat(
+                        title: "Audit",
+                        value: "Nothing left",
+                        subtitle: "Every dollar went to its optimal card",
+                        systemImage: "checkmark.seal.fill",
+                        tint: PPTheme.success
+                    )
+                } else if let net = topNewCardNet {
                     VStack(alignment: .leading, spacing: 6) {
                         Image(systemName: "wand.and.stars")
                             .font(.title3)
@@ -145,6 +187,15 @@ struct TodayView: View {
             }
         }
         .buttonStyle(.plain)
+    }
+
+    @ViewBuilder
+    private var auditDestination: some View {
+        if auditReport != nil {
+            AuditView()
+        } else {
+            AdvisorView(initialMode: .newIdeas)
+        }
     }
 
     private var expiringTile: some View {

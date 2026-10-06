@@ -26,6 +26,7 @@
 		F3649118E5705141BCCAC633 = {isa = PBXBuildFile; fileRef = AC09E35E2D8356688DE7725D; };
 		48F4CF1469A75AB1A4CBDA42 = {isa = PBXBuildFile; fileRef = F757B53539A85536A4E91EF2; };
 		51771073F7D5593A877EF268 = {isa = PBXBuildFile; fileRef = 86376429A1B858FA9099815E; };
+		18696237F31A541399479942 = {isa = PBXBuildFile; fileRef = 2E0D6131E9C65D0EB0480DC0; };
 		73186CA6779E5418A21ABFBB = {isa = PBXBuildFile; fileRef = BE01F7766E1352118849904B; };
 		A26BF17D596E53A79437B77C = {isa = PBXBuildFile; fileRef = FA3B9C5C6475558793241513; };
 		804D5FE545FE5CCBBC15D1FD = {isa = PBXBuildFile; fileRef = 46252E7CA00F5D5290FD05F8; };
@@ -42,6 +43,7 @@
 		25D06ED5F92B5758A18DAB34 = {isa = PBXBuildFile; fileRef = A6DAD4045E925BF1B15D54AF; };
 		72B04BE2D5C25389979573F9 = {isa = PBXBuildFile; fileRef = AE69CB7A32255A6DA1D8DB3E; };
 		2FD2A000000B5CABA80F63FF = {isa = PBXBuildFile; fileRef = 6F930F0A42A65FE4B2D7D6D5; };
+		0AFCFFC9230158BDBD0F6D79 = {isa = PBXBuildFile; fileRef = 04C23DFD3779513EB378ABE5; };
 		A1B9A3FE8B4B5857AF8A487F = {isa = PBXBuildFile; fileRef = 6C683DD6F6265C9CA32258F9; };
 		4ACBCDE08D965B0C8FF636E9 = {isa = PBXBuildFile; fileRef = 3B8B8CC0FA8F5F0494772A28; };
 		EF50ECE57CA55718927290A1 = {isa = PBXBuildFile; fileRef = 77CD3F1D059859248CB608D2; };
@@ -50,6 +52,7 @@
 		07102DFD11985EFE8FA83ABF = {isa = PBXBuildFile; fileRef = D987E15D2B865737A4608AB4; };
 		205A18FC8B41531AB3169998 = {isa = PBXBuildFile; fileRef = E3A7CBA3EF705AC19377741B; };
 		0EAB398AA28354B3B59DF76A = {isa = PBXBuildFile; fileRef = 50D375488BD459DE94DF961D; };
+		B24DD89A4069594FA43BCB2C = {isa = PBXBuildFile; fileRef = C82C5778724051E18A7CFFAB; };
 		7E050FD373915F0D8210C03A = {isa = PBXBuildFile; fileRef = 77CD3F1D059859248CB608D2; };
 		B56627EAA0355C6BBB46A907 = {isa = PBXBuildFile; fileRef = 8A8456B07BCB506B9C8FC2D0; };
 /* End PBXBuildFile section */
@@ -78,6 +81,7 @@
 		AC09E35E2D8356688DE7725D = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PDFStatementParser.swift; path = PerkPilot/Services/PDFStatementParser.swift; sourceTree = SOURCE_ROOT; };
 		F757B53539A85536A4E91EF2 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CategoryEngine.swift; path = PerkPilot/Services/CategoryEngine.swift; sourceTree = SOURCE_ROOT; };
 		86376429A1B858FA9099815E = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RewardMatcher.swift; path = PerkPilot/Services/RewardMatcher.swift; sourceTree = SOURCE_ROOT; };
+		2E0D6131E9C65D0EB0480DC0 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SpendAuditService.swift; path = PerkPilot/Services/SpendAuditService.swift; sourceTree = SOURCE_ROOT; };
 		BE01F7766E1352118849904B = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TransactionStore.swift; path = PerkPilot/Services/TransactionStore.swift; sourceTree = SOURCE_ROOT; };
 		FA3B9C5C6475558793241513 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RewardsAdvisor.swift; path = PerkPilot/Services/RewardsAdvisor.swift; sourceTree = SOURCE_ROOT; };
 		46252E7CA00F5D5290FD05F8 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PortfolioAnalyzer.swift; path = PerkPilot/Services/PortfolioAnalyzer.swift; sourceTree = SOURCE_ROOT; };
@@ -94,6 +98,7 @@
 		A6DAD4045E925BF1B15D54AF = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StatementImportView.swift; path = PerkPilot/Views/StatementImportView.swift; sourceTree = SOURCE_ROOT; };
 		AE69CB7A32255A6DA1D8DB3E = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StatementsView.swift; path = PerkPilot/Views/StatementsView.swift; sourceTree = SOURCE_ROOT; };
 		6F930F0A42A65FE4B2D7D6D5 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RewardsCheckView.swift; path = PerkPilot/Views/RewardsCheckView.swift; sourceTree = SOURCE_ROOT; };
+		04C23DFD3779513EB378ABE5 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuditView.swift; path = PerkPilot/Views/AuditView.swift; sourceTree = SOURCE_ROOT; };
 		6C683DD6F6265C9CA32258F9 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AdvisorView.swift; path = PerkPilot/Views/AdvisorView.swift; sourceTree = SOURCE_ROOT; };
 		3B8B8CC0FA8F5F0494772A28 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AskView.swift; path = PerkPilot/Views/AskView.swift; sourceTree = SOURCE_ROOT; };
 		77CD3F1D059859248CB608D2 = {isa = PBXFileReference; lastKnownFileType = text.json; name = SeedData-A.json; path = PerkPilot/Resources/SeedData-A.json; sourceTree = SOURCE_ROOT; };
@@ -103,6 +108,7 @@
 		D987E15D2B865737A4608AB4 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StatementTests.swift; path = PerkPilotTests/StatementTests.swift; sourceTree = SOURCE_ROOT; };
 		E3A7CBA3EF705AC19377741B = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AdvisorTests.swift; path = PerkPilotTests/AdvisorTests.swift; sourceTree = SOURCE_ROOT; };
 		50D375488BD459DE94DF961D = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AskTests.swift; path = PerkPilotTests/AskTests.swift; sourceTree = SOURCE_ROOT; };
+		C82C5778724051E18A7CFFAB = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuditTests.swift; path = PerkPilotTests/AuditTests.swift; sourceTree = SOURCE_ROOT; };
 		60B7B6018D245852B30D7DD3 = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PerkPilot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E30F65814ADE59C9BA47DB38 = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PerkPilotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -153,6 +159,7 @@
 				AC09E35E2D8356688DE7725D,
 				F757B53539A85536A4E91EF2,
 				86376429A1B858FA9099815E,
+				2E0D6131E9C65D0EB0480DC0,
 				BE01F7766E1352118849904B,
 				FA3B9C5C6475558793241513,
 				46252E7CA00F5D5290FD05F8,
@@ -175,6 +182,7 @@
 				A6DAD4045E925BF1B15D54AF,
 				AE69CB7A32255A6DA1D8DB3E,
 				6F930F0A42A65FE4B2D7D6D5,
+				04C23DFD3779513EB378ABE5,
 				6C683DD6F6265C9CA32258F9,
 				3B8B8CC0FA8F5F0494772A28,
 			);
@@ -220,6 +228,7 @@
 				D987E15D2B865737A4608AB4,
 				E3A7CBA3EF705AC19377741B,
 				50D375488BD459DE94DF961D,
+				C82C5778724051E18A7CFFAB,
 			);
 			name = PerkPilotTests;
 			path = PerkPilotTests;
@@ -361,6 +370,7 @@
 				F3649118E5705141BCCAC633,
 				48F4CF1469A75AB1A4CBDA42,
 				51771073F7D5593A877EF268,
+				18696237F31A541399479942,
 				73186CA6779E5418A21ABFBB,
 				A26BF17D596E53A79437B77C,
 				804D5FE545FE5CCBBC15D1FD,
@@ -377,6 +387,7 @@
 				25D06ED5F92B5758A18DAB34,
 				72B04BE2D5C25389979573F9,
 				2FD2A000000B5CABA80F63FF,
+				0AFCFFC9230158BDBD0F6D79,
 				A1B9A3FE8B4B5857AF8A487F,
 				4ACBCDE08D965B0C8FF636E9,
 			);
@@ -390,6 +401,7 @@
 				07102DFD11985EFE8FA83ABF,
 				205A18FC8B41531AB3169998,
 				0EAB398AA28354B3B59DF76A,
+				B24DD89A4069594FA43BCB2C,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

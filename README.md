@@ -102,6 +102,21 @@ later features can reuse them without touching views:
 | `RewardsAdvisor` | `Services/RewardsAdvisor.swift` | Bundled 12-card earn-rate table (caps, merchant boosts) + conservative point valuations (UR 1.5¢, MR 1.0¢, SkyMiles 1.0¢) + `bestCard()` ranking | "Which card?" lookup |
 | `PortfolioAnalyzer` | `Services/PortfolioAnalyzer.swift` | ~12-candidate new-card database; incremental net-value math vs current best rates with overlap exclusions (e.g. Whole Foods spend excluded from Amex Gold grocery case) and 5/24 cautions | "New card ideas" screen |
 | `AskParser` / `AskAnswerer` | `Services/AskParser.swift`, `Services/AskAnswerer.swift` | Free-text "which card?" parsing (amount + category/merchant) and expiring-credit-first answer composition with earn-rate stacking | "Ask PerkPilot" conversational tab |
+| `SpendAuditService` | `Services/SpendAuditService.swift` | Chronological transaction replay vs. optimal card (annual caps simulated in date order via dual ledgers, merchant boosts, $0.25 de minimis) + "tracked expirations" tally of unused recurring credits; pure logic, fully unit-tested | **Missed Rewards Audit**: YTD missed-earnings + expired-credits hero number, per-category/per-card breakdowns, transaction-level misses |
+
+## Audit methodology (assumptions, plain language)
+
+The Missed Rewards Audit replays every imported charge in date order and asks,
+for each one, "what would the best of his 12 cards have earned here?" Annual
+caps (e.g. Costco's $7k gas limit, Southwest's shared $8k) are simulated as
+they would have filled up in the counterfactual, so the "optimal" card always
+had headroom — no fantasy math. Point values are conservative estimates (UR
+1.5¢, MR 1.0¢, SkyMiles 1.0¢, Rapid Rewards 1.2¢, cash at face value). Misses
+under $0.25 don't count. Expired credits are counted at face value only for
+periods since he started tracking, only when his statements show spend where
+the credit could plausibly have been used, and never for muted benefits or
+completed periods. Low-confidence transactions are excluded (the count is
+shown). All statement data stays on-device.
 
 ## Privacy
 
